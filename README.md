@@ -2,6 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/peasy-pdf.svg)](https://rubygems.org/gems/peasy-pdf)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://agentgif.com/badge/github/peasytools/peasy-pdf-rb/stars.svg)](https://github.com/peasytools/peasy-pdf-rb)
 
 Ruby client for the [PeasyPDF](https://peasypdf.com) API — merge, split, rotate, and compress PDF files. Zero dependencies beyond Ruby stdlib (Net::HTTP, JSON, URI).
 
