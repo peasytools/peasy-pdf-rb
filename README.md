@@ -3,11 +3,30 @@
 [![Gem Version](https://badge.fury.io/rb/peasy-pdf.svg)](https://rubygems.org/gems/peasy-pdf)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Ruby client for the [PeasyPDF](https://peasypdf.com) API — merge, split, compress, rotate, and watermark PDF files. Zero dependencies beyond Ruby stdlib (Net::HTTP, JSON, URI).
+Ruby client for the [PeasyPDF](https://peasypdf.com) API — merge, split, rotate, and compress PDF files. Zero dependencies beyond Ruby stdlib (Net::HTTP, JSON, URI).
 
-Built from [PeasyPDF](https://peasypdf.com), a free online PDF toolkit with tools for every PDF workflow — merge multiple documents, split pages, compress file size, rotate orientations, and add watermarks.
+Built from [PeasyPDF](https://peasypdf.com), a comprehensive PDF toolkit offering free online tools for merging, splitting, rotating, compressing, and converting PDF documents. The site includes detailed guides on PDF optimization, accessibility best practices, and format conversion, plus a glossary covering terms from linearization to OCR to PDF/A archival compliance.
 
-> **Try the interactive tools at [peasypdf.com](https://peasypdf.com)** — [PDF Tools](https://peasypdf.com/), [PDF Glossary](https://peasypdf.com/glossary/), [PDF Guides](https://peasypdf.com/guides/)
+> **Try the interactive tools at [peasypdf.com](https://peasypdf.com)** — [Merge PDF](https://peasypdf.com/pdf/merge-pdf/), [Split PDF](https://peasypdf.com/pdf/split-pdf/), [Compress PDF](https://peasypdf.com/pdf/compress-pdf/), [Rotate PDF](https://peasypdf.com/pdf/rotate-pdf/), and more.
+
+<p align="center">
+  <img src="demo.gif" alt="peasy-pdf demo — PDF merge, split, and compress tools in Ruby terminal" width="800">
+</p>
+
+## Table of Contents
+
+- [Install](#install)
+- [Quick Start](#quick-start)
+- [What You Can Do](#what-you-can-do)
+  - [PDF Document Operations](#pdf-document-operations)
+  - [Browse Reference Content](#browse-reference-content)
+  - [Search and Discovery](#search-and-discovery)
+- [API Client](#api-client)
+  - [Available Methods](#available-methods)
+- [Learn More About PDF Tools](#learn-more-about-pdf-tools)
+- [Also Available](#also-available)
+- [Peasy Developer Tools](#peasy-developer-tools)
+- [License](#license)
 
 ## Install
 
@@ -34,6 +53,105 @@ tools["results"].each do |tool|
   puts "#{tool["name"]}: #{tool["description"]}"
 end
 ```
+
+## What You Can Do
+
+### PDF Document Operations
+
+The Portable Document Format (PDF) was created by Adobe in 1993 and became an open ISO standard (ISO 32000) in 2008. Today PDF is the most widely used format for document exchange, supporting text, images, forms, digital signatures, and embedded multimedia. PeasyPDF provides tools for every common PDF workflow — from merging invoices into a single file to compressing scanned documents for email delivery.
+
+| Operation | Slug | Description |
+|-----------|------|-------------|
+| Merge PDF | `pdf-merge` | Combine multiple PDF documents into one file |
+| Split PDF | `pdf-split` | Extract specific pages or split into individual files |
+| Compress PDF | `pdf-compress` | Reduce file size by optimizing images and removing metadata |
+| Rotate PDF | `pdf-rotate` | Rotate pages by 90, 180, or 270 degrees |
+| PDF to PNG | `pdf-to-png` | Convert PDF pages to high-resolution PNG images |
+
+The PDF specification (ISO 32000-2:2020) supports a remarkably rich feature set including interactive forms (AcroForms and XFA), digital signatures with certificate chains, 3D artwork using U3D and PRC formats, embedded multimedia, and accessibility tagging for screen readers. Linearized PDFs rearrange the internal object structure so that the first page can be displayed before the entire file has been downloaded — critical for web-based PDF viewing where multi-megabyte documents need to appear instantly.
+
+```ruby
+require "peasy_pdf"
+
+client = PeasyPDF::Client.new
+
+# Retrieve the PDF merge tool and inspect its capabilities
+tool = client.get_tool("pdf-merge")
+puts "Tool: #{tool["name"]}"              # PDF merge tool name
+puts "Description: #{tool["description"]}" # How merging works
+
+# List all available PDF tools with pagination
+tools = client.list_tools(page: 1, limit: 20)
+puts "Total PDF tools available: #{tools["count"]}"
+```
+
+Learn more: [Merge PDF Tool](https://peasypdf.com/pdf/merge-pdf/) · [How to Merge PDF Files](https://peasypdf.com/guides/how-to-merge-pdf-files/) · [PDF Compression Guide](https://peasypdf.com/guides/pdf-compression-guide/)
+
+### Browse Reference Content
+
+PeasyPDF includes a comprehensive glossary of document format terminology and in-depth guides for common workflows. The glossary covers foundational concepts like PDF linearization (web-optimized PDFs that load page-by-page), OCR (optical character recognition for scanned documents), DPI (dots per inch for print-quality output), and PDF/A (the ISO 19005 archival standard used by governments and libraries worldwide).
+
+| Term | Description |
+|------|-------------|
+| [PDF](https://peasypdf.com/glossary/pdf/) | Portable Document Format — ISO 32000 open standard |
+| [PDF/A](https://peasypdf.com/glossary/pdfa/) | Archival PDF subset (ISO 19005) for long-term preservation |
+| [DPI](https://peasypdf.com/glossary/dpi/) | Dots per inch — resolution metric for print and rasterization |
+| [OCR](https://peasypdf.com/glossary/ocr/) | Optical character recognition for searchable scanned PDFs |
+| [Rasterization](https://peasypdf.com/glossary/rasterization/) | Converting vector PDF content to pixel-based images |
+
+PDF compression operates at multiple levels within the document structure. Text and vector graphics are stored as compact operator sequences in content streams, which can be compressed with Flate (zlib) encoding. Embedded images — often the largest component of a PDF — support JPEG, JPEG2000, JBIG2, and CCITT fax compression depending on the image type. A well-optimized PDF applies different compression strategies to different objects: lossy JPEG for photographs, lossless Flate for text-heavy pages, and JBIG2 for scanned black-and-white documents.
+
+```ruby
+require "peasy_pdf"
+
+client = PeasyPDF::Client.new
+
+# Browse the PDF glossary for document format terminology
+glossary = client.list_glossary(search: "linearization")
+glossary["results"].each do |term|
+  puts "#{term["term"]}: #{term["definition"]}"
+end
+
+# Read a specific guide on PDF accessibility best practices
+guide = client.get_guide("accessible-pdf-best-practices")
+puts "Guide: #{guide["title"]} (Level: #{guide["audience_level"]})"
+```
+
+Learn more: [PDF Glossary](https://peasypdf.com/glossary/) · [Accessible PDF Best Practices](https://peasypdf.com/guides/accessible-pdf-best-practices/) · [How to Convert PDF to Images](https://peasypdf.com/guides/how-to-convert-pdf-to-images/)
+
+### Search and Discovery
+
+The API supports full-text search across all content types — tools, glossary terms, guides, use cases, and format documentation. Search results are grouped by content type, making it easy to find exactly what you need for a specific PDF workflow. Format conversion data covers the full matrix of source-to-target transformations, including quality considerations — converting a vector PDF to a raster format like PNG requires choosing an appropriate DPI (150 for screen viewing, 300 for print, 600 for archival), since this irreversibly flattens scalable content into a fixed pixel grid.
+
+```ruby
+require "peasy_pdf"
+
+client = PeasyPDF::Client.new
+
+# Search across all PDF content — tools, glossary, guides, and formats
+results = client.search("compress pdf")
+puts "Found #{results["results"]["tools"].length} tools"
+puts "Found #{results["results"]["glossary"].length} glossary terms"
+puts "Found #{results["results"]["guides"].length} guides"
+
+# Discover format conversion paths — what can PDF convert to?
+conversions = client.list_conversions(source: "pdf")
+conversions["results"].each do |c|
+  puts "#{c["source_format"]} -> #{c["target_format"]}"
+end
+
+# Get detailed information about a specific document format
+format = client.get_format("pdf")
+puts "#{format["name"]} (#{format["extension"]}): #{format["mime_type"]}"
+```
+
+| Format | Standard | Content Type | Primary Use |
+|--------|----------|-------------|-------------|
+| PDF | ISO 32000 | Vector + raster | Universal document exchange |
+| PDF/A | ISO 19005 | Archival subset | Long-term document preservation |
+| PDF/X | ISO 15930 | Print-ready subset | Pre-press and commercial printing |
+
+Learn more: [REST API Docs](https://peasypdf.com/developers/) · [All PDF Tools](https://peasypdf.com/) · [All Formats](https://peasypdf.com/formats/)
 
 ## API Client
 
@@ -101,12 +219,12 @@ All list methods accept keyword arguments: `page:`, `limit:`, `category:`, `sear
 Full API documentation at [peasypdf.com/developers/](https://peasypdf.com/developers/).
 OpenAPI 3.1.0 spec: [peasypdf.com/api/openapi.json](https://peasypdf.com/api/openapi.json).
 
-## Learn More
+## Learn More About PDF Tools
 
-- **Tools**: [PDF Merge](https://peasypdf.com/pdf/merge-pdf/) · [PDF Split](https://peasypdf.com/pdf/split-pdf/) · [PDF Compress](https://peasypdf.com/pdf/compress-pdf/) · [All Tools](https://peasypdf.com/)
-- **Guides**: [PDF Compression Guide](https://peasypdf.com/guides/pdf-compression-guide/) · [How to Merge PDF Files](https://peasypdf.com/guides/how-to-merge-pdf-files/) · [All Guides](https://peasypdf.com/guides/)
-- **Glossary**: [PDF](https://peasypdf.com/glossary/pdf/) · [Linearization](https://peasypdf.com/glossary/linearization/) · [OCR](https://peasypdf.com/glossary/ocr/) · [All Terms](https://peasypdf.com/glossary/)
-- **Formats**: [PDF](https://peasypdf.com/formats/pdf/) · [PDF/A](https://peasypdf.com/formats/) · [All Formats](https://peasypdf.com/formats/)
+- **Tools**: [Merge PDF](https://peasypdf.com/pdf/merge-pdf/) · [Split PDF](https://peasypdf.com/pdf/split-pdf/) · [Compress PDF](https://peasypdf.com/pdf/compress-pdf/) · [Rotate PDF](https://peasypdf.com/pdf/rotate-pdf/) · [PDF to PNG](https://peasypdf.com/pdf/pdf-to-png/) · [All Tools](https://peasypdf.com/)
+- **Guides**: [How to Merge PDF Files](https://peasypdf.com/guides/how-to-merge-pdf-files/) · [PDF Compression Guide](https://peasypdf.com/guides/pdf-compression-guide/) · [Accessible PDF Best Practices](https://peasypdf.com/guides/accessible-pdf-best-practices/) · [How to Convert PDF to Images](https://peasypdf.com/guides/how-to-convert-pdf-to-images/) · [All Guides](https://peasypdf.com/guides/)
+- **Glossary**: [PDF](https://peasypdf.com/glossary/pdf/) · [PDF/A](https://peasypdf.com/glossary/pdfa/) · [DPI](https://peasypdf.com/glossary/dpi/) · [OCR](https://peasypdf.com/glossary/ocr/) · [Rasterization](https://peasypdf.com/glossary/rasterization/) · [All Terms](https://peasypdf.com/glossary/)
+- **Formats**: [All Formats](https://peasypdf.com/formats/)
 - **API**: [REST API Docs](https://peasypdf.com/developers/) · [OpenAPI Spec](https://peasypdf.com/api/openapi.json)
 
 ## Also Available
