@@ -11,7 +11,7 @@ Built from [PeasyPDF](https://peasypdf.com), a comprehensive PDF toolkit offerin
 > **Try the interactive tools at [peasypdf.com](https://peasypdf.com)** — [Merge PDF](https://peasypdf.com/pdf/merge-pdf/), [Split PDF](https://peasypdf.com/pdf/split-pdf/), [Compress PDF](https://peasypdf.com/pdf/compress-pdf/), [Rotate PDF](https://peasypdf.com/pdf/rotate-pdf/), and more.
 
 <p align="center">
-  <img src="demo.gif" alt="peasy-pdf demo — PDF merge, split, and compress tools in Ruby terminal" width="800">
+  <a href="https://agentgif.com/efZk75CV"><img src="https://media.agentgif.com/efZk75CV.gif" alt="peasy-pdf demo — PDF merge, split, and compress tools in Ruby terminal" width="800"></a>
 </p>
 
 ## Table of Contents
